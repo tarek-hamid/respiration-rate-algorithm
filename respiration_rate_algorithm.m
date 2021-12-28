@@ -64,15 +64,14 @@ ylabel('Magnitude')
 
 %% Algorithm 1 - simple peak detection
 
-% Could also use find peaks fnc from MATLAB
 % Can use mean of signal as baseline to decrease sensitivity
-% Peak = sample greater than two nearest neighbors
 
 % Initialize breath count in signal
 breath_count = 0;
 
 % Iterate through signal. Compare neighbors and check if both less than
 % current point. If yes -> add to breath count. 
+% Peak = sample greater than two nearest neighbors
 for i = 2 : length(filtered_sample_data) - 1
     if(filtered_sample_data(i) > filtered_sample_data(i - 1) && filtered_sample_data(i) > filtered_sample_data(i + 1))
         breath_count = breath_count + 1;
@@ -83,17 +82,6 @@ end
 duration_in_minutes = N / fs / 60;
 peak_detection_respiration_rate = floor(breath_count / duration_in_minutes);
 display(peak_detection_respiration_rate);
-
-% Comments:
-% 1. Not very robust
-%    - Will detect small peaks and multiple peaks within a single peak.
-%    - Is small peak detection good for weak, rapid breathes (especially 
-%    for babies)?
-% 2. Efficiency
-%    - Must traverse entire data-set to find peaks.
-% 3. Adding baseline
-%    - You can add baseline as threshold (mean of dataset) to ignore small
-%    detected peaks.
 
 %% Algorithm 2 - moving average filter 
 
@@ -111,9 +99,3 @@ end
 % Calculate respiration rate
 moving_avg_respiration_rate = floor(breath_count / duration_in_minutes);
 display(moving_avg_respiration_rate);
-
-% Comments:
-% 1. Benefit of this algorithm is when signal is noisy/contains multiple
-% local maxima in one peak.
-% 2. Efficiency concerns
-%    - Must calculate moving average first then traverse moving avg vector.
